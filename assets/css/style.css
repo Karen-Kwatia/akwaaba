@@ -1,0 +1,361 @@
+
+/* =========================================
+   AKWAABA 360 - GLOBAL STYLE GUIDE
+   A lively, modern Ghana tourism design
+   ========================================= */
+
+/* Define the main colours, fonts and reusable values. */
+:root {
+    --primary-green: #12372A;
+    --secondary-green: #2E8B70;
+    --light-green: #E5F2EB;
+    --background-cream: #F5F3ED;
+    --accent-gold: #D9A441;
+    --text-dark: #252525;
+    --text-light: #FFFFFF;
+    --border-color: #E0E7E2;
+    --font-main: Arial, Helvetica, sans-serif;
+}
+
+/* Apply consistent sizing to every element. */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Set the general appearance of the website. */
+body {
+    font-family: var(--font-main);
+    background:
+        radial-gradient(circle at top right, #e4f1e9 0, transparent 30%),
+        var(--background-cream);
+    color: var(--text-dark);
+    line-height: 1.7;
+    min-height: 100vh;
+}
+
+/* Make images responsive. */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 10px;
+}
+
+/* Remove default underlines from links. */
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Style all main headings. */
+h1, h2, h3, h4 {
+    color: var(--primary-green);
+    line-height: 1.3;
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+/* Make the main page heading more prominent. */
+h1 {
+    font-size: clamp(28px, 4vw, 42px);
+}
+
+/* Give paragraphs consistent spacing. */
+p {
+    margin-bottom: 15px;
+}
+
+/* =========================================
+   SHARED HEADER AND NAVIGATION
+   ========================================= */
+
+/* Create a rich green gradient for the website header. */
+.site-header {
+    background: linear-gradient(
+        120deg,
+        #12372A,
+        #1B5943,
+        #2E8B70
+    );
+    color: var(--text-light);
+    padding: 20px 5%;
+    box-shadow: 0 4px 15px rgba(18, 55, 42, 0.2);
+    position: relative;
+    z-index: 10;
+}
+
+/* Add a small gold accent beneath the header. */
+.site-header::after {
+    content: "";
+    display: block;
+    height: 3px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        var(--accent-gold),
+        transparent
+    );
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+/* Arrange the logo and navigation horizontally. */
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+/* Style the website logo. */
+.logo {
+    font-size: 27px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    color: var(--text-light);
+}
+
+/* Arrange navigation links in a row. */
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    list-style: none;
+    flex-wrap: wrap;
+}
+
+/* Style navigation links. */
+.nav-links a {
+    color: var(--text-light);
+    font-size: 15px;
+    font-weight: 600;
+    padding: 9px 13px;
+    border-radius: 7px;
+    transition: all 0.3s ease;
+}
+
+/* Give navigation links a lively hover effect. */
+.nav-links a:hover {
+    color: var(--accent-gold);
+    background-color: rgba(255, 255, 255, 0.12);
+    transform: translateY(-2px);
+}
+
+/* =========================================
+   PAGE LAYOUT
+   ========================================= */
+
+/* Provide a reusable content container. */
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 0;
+}
+
+/* Give content sections a clean card appearance. */
+.content-card {
+    background: linear-gradient(145deg, #FFFFFF, #FAFCFA);
+    padding: 32px;
+    border: 1px solid rgba(46, 139, 112, 0.12);
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(18, 55, 42, 0.08);
+    margin-bottom: 30px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Lift cards slightly when users hover over them. */
+.content-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(18, 55, 42, 0.13);
+}
+
+/* =========================================
+   BUTTONS
+   ========================================= */
+
+/* Define the general appearance of buttons. */
+.btn {
+    display: inline-block;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: bold;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(18, 55, 42, 0.12);
+    transition: all 0.3s ease;
+}
+
+/* Style the main action button. */
+.btn-primary {
+    background: linear-gradient(135deg, #2E8B70, #17634B);
+    color: var(--text-light);
+}
+
+/* Lift and brighten the main button on hover. */
+.btn-primary:hover {
+    background: linear-gradient(135deg, #17634B, #12372A);
+    transform: translateY(-3px);
+    box-shadow: 0 7px 16px rgba(18, 55, 42, 0.22);
+}
+
+/* Style secondary buttons using the gold accent. */
+.btn-secondary {
+    background: linear-gradient(135deg, #E7B957, #D9A441);
+    color: var(--primary-green);
+}
+
+/* Change secondary button appearance on hover. */
+.btn-secondary:hover {
+    background: linear-gradient(135deg, #D9A441, #C28E2C);
+    transform: translateY(-3px);
+    box-shadow: 0 7px 16px rgba(194, 142, 44, 0.22);
+}
+
+/* Provide visible keyboard focus for buttons and links. */
+a:focus-visible,
+button:focus-visible {
+    outline: 3px solid var(--accent-gold);
+    outline-offset: 3px;
+}
+
+/* =========================================
+   FORMS AND INPUTS
+   ========================================= */
+
+/* Give forms a consistent layout. */
+form {
+    max-width: 600px;
+}
+
+/* Style form labels. */
+label {
+    display: block;
+    margin-bottom: 7px;
+    font-weight: 600;
+    color: var(--primary-green);
+}
+
+/* Style text fields, dropdowns and text areas. */
+input:not([type="checkbox"]):not([type="radio"]),
+select,
+textarea {
+    width: 100%;
+    padding: 13px 15px;
+    margin-bottom: 18px;
+    border: 1px solid var(--border-color);
+    border-radius: 9px;
+    background-color: #FAFCFA;
+    color: var(--text-dark);
+    font-family: inherit;
+    font-size: 15px;
+    transition: all 0.3s ease;
+}
+
+/* Give form fields a green highlight when selected. */
+input:not([type="checkbox"]):not([type="radio"]):focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--secondary-green);
+    background-color: #FFFFFF;
+    box-shadow: 0 0 0 4px rgba(46, 139, 112, 0.13);
+}
+
+/* Keep checkboxes at their natural size. */
+input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+    padding: 0;
+    accent-color: var(--secondary-green);
+    cursor: pointer;
+}
+
+/* Keep checkbox labels and their checkboxes together. */
+form label:has(input[type="checkbox"]) {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: fit-content;
+    cursor: pointer;
+    margin-bottom: 18px;
+}
+
+/* =========================================
+   SHARED FOOTER
+   ========================================= */
+
+/* Style the website footer. */
+.site-footer {
+    background: linear-gradient(
+        120deg,
+        #12372A,
+        #1B5943,
+        #2E8B70
+    );
+    color: var(--text-light);
+    text-align: center;
+    padding: 30px 5%;
+    margin-top: 50px;
+    border-top: 3px solid var(--accent-gold);
+}
+
+/* =========================================
+   RESPONSIVE DESIGN
+   ========================================= */
+
+/* Adjust the navigation and layout on smaller screens. */
+@media (max-width: 768px) {
+
+    /* Stack the logo and navigation vertically. */
+    .nav-container {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    /* Centre navigation links and allow them to wrap. */
+    .nav-links {
+        justify-content: center;
+        gap: 8px;
+    }
+
+    /* Reduce navigation link padding on smaller screens. */
+    .nav-links a {
+        padding: 7px 9px;
+        font-size: 14px;
+    }
+
+    /* Increase the content width on smaller screens. */
+    .container {
+        width: 94%;
+        padding: 25px 0;
+    }
+
+    /* Reduce card padding on smaller screens. */
+    .content-card {
+        padding: 22px;
+    }
+
+    /* Make buttons easier to tap on smaller screens. */
+    .btn {
+        padding: 12px 18px;
+    }
+}
+
+/* Reduce animations for users who prefer less motion. */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+    }
+}

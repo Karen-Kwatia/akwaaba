@@ -1,0 +1,18 @@
+# Ignore uploaded user images and videos.
+uploads/
+
+# Ignore private database connection settings.
+config/config.php
+
+# Ignore local operating system files.
+.DS_Store
+Thumbs.db
+
+# Ignore environment variables and secret credentials.
+.env
+
+# Ignore Composer-installed dependencies.
+vendor/
+
+# Ignore local PyCharm project settings.
+.idea/
