@@ -3,8 +3,11 @@
 // Load the reusable database connection.
 require_once __DIR__ . '/../includes/db.php';
 
-// Initialise a message for displaying feedback.
-$message = '';
+// Load the language translation system.
+require_once __DIR__ . '/../includes/language.php';
+
+// Initialise a message translation key.
+$messageKey = '';
 
 // Retrieve the reset token from the URL or submitted form.
 $token = $_GET['token'] ?? $_POST['token'] ?? '';
@@ -16,7 +19,7 @@ $resetRequest = null;
 if (!preg_match('/^[a-f0-9]{64}$/', $token)) {
 
     // Display an error for an invalid token.
-    $message = 'This password reset link is invalid or incomplete.';
+    $messageKey = 'reset_invalid_token';
 
 } else {
 
@@ -41,7 +44,7 @@ if (!preg_match('/^[a-f0-9]{64}$/', $token)) {
     if (!$resetRequest) {
 
         // Reject expired or unknown reset tokens.
-        $message = 'This password reset link has expired or is invalid.';
+        $messageKey = 'reset_expired_token';
 
     } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -55,12 +58,12 @@ if (!preg_match('/^[a-f0-9]{64}$/', $token)) {
         if ($password !== $confirmPassword) {
 
             // Display an error when the passwords differ.
-            $message = 'The passwords do not match.';
+            $messageKey = 'reset_password_mismatch';
 
         } elseif (strlen($password) < 8) {
 
             // Require passwords to contain at least eight characters.
-            $message = 'Your password must contain at least 8 characters.';
+            $messageKey = 'reset_password_length';
 
         } else {
 
@@ -89,8 +92,8 @@ if (!preg_match('/^[a-f0-9]{64}$/', $token)) {
             // Clear the reset request so the form is no longer displayed.
             $resetRequest = null;
 
-            // Display a success message.
-            $message = 'Your password has been reset successfully. You can now log in.';
+            // Display the translated success message.
+            $messageKey = 'reset_password_success';
         }
     }
 }
@@ -102,15 +105,19 @@ require_once __DIR__ . '/../includes/header.php';
 <!-- Display the password reset page inside a styled content card. -->
 <section class="content-card">
 
-    <!-- Display the page heading. -->
-    <h1>Reset Your Password</h1>
+    <!-- Display the translated page heading. -->
+    <h1>
+        <?php echo htmlspecialchars(ak360_translate('reset_password_title')); ?>
+    </h1>
 
     <!-- Display any success or error messages. -->
-    <?php if ($message !== ''): ?>
-        <p><?php echo htmlspecialchars($message); ?></p>
+    <?php if ($messageKey !== ''): ?>
+        <p>
+            <?php echo htmlspecialchars(ak360_translate($messageKey)); ?>
+        </p>
     <?php endif; ?>
 
-    <?php if ($resetRequest && $_SERVER['REQUEST_METHOD'] === 'GET'): ?>
+    <?php if ($resetRequest): ?>
 
         <!-- Allow users with valid reset links to enter a new password. -->
         <form method="POST" action="">
@@ -123,7 +130,9 @@ require_once __DIR__ . '/../includes/header.php';
             >
 
             <!-- Collect the user's new password. -->
-            <label for="password">New Password:</label>
+            <label for="password">
+                <?php echo htmlspecialchars(ak360_translate('new_password')); ?>
+            </label>
 
             <input
                 type="password"
@@ -134,7 +143,9 @@ require_once __DIR__ . '/../includes/header.php';
             >
 
             <!-- Collect the password confirmation. -->
-            <label for="confirm_password">Confirm New Password:</label>
+            <label for="confirm_password">
+                <?php echo htmlspecialchars(ak360_translate('confirm_new_password')); ?>
+            </label>
 
             <input
                 type="password"
@@ -144,18 +155,20 @@ require_once __DIR__ . '/../includes/header.php';
                 required
             >
 
-            <!-- Submit the new password using the shared button style. -->
+            <!-- Submit the new password. -->
             <button type="submit" class="btn btn-primary">
-                Reset Password
+                <?php echo htmlspecialchars(ak360_translate('reset_password_button')); ?>
             </button>
 
         </form>
 
     <?php endif; ?>
 
-    <!-- Provide a styled link back to the login page. -->
+    <!-- Provide a translated link back to the login page. -->
     <p>
-        <a href="login.php" class="btn btn-secondary">Back to Login</a>
+        <a href="login.php" class="btn btn-secondary">
+            <?php echo htmlspecialchars(ak360_translate('back_to_login')); ?>
+        </a>
     </p>
 
 </section>
