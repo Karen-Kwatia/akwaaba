@@ -366,7 +366,6 @@ VALUES
 UPDATE sites
 SET
     category = 'Historical Site',
-    short_description = 'Discover the history of Cape Coast Castle and its connection to the transatlantic slave trade.',
     status = 'active'
 WHERE name = 'Cape Coast Castle';
 
@@ -374,7 +373,6 @@ WHERE name = 'Cape Coast Castle';
 UPDATE sites
 SET
     category = 'National Park',
-    short_description = 'Explore a rainforest environment famous for its spectacular canopy walkway.',
     status = 'active'
 WHERE name = 'Kakum National Park';
 
@@ -382,11 +380,10 @@ WHERE name = 'Kakum National Park';
 UPDATE sites
 SET
     category = 'National Park',
-    short_description = 'Experience Ghanaian wildlife and discover the natural beauty of Mole National Park.',
     status = 'active'
 WHERE name = 'Mole National Park';
 
 -- Display the updated destination records.
-SELECT id, name, category, short_description, status
+SELECT id, name, category, status
 FROM sites
 ORDER BY id;
