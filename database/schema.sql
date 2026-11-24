@@ -617,9 +617,6 @@ CREATE TABLE site_images (
 ALTER TABLE sites
 ADD COLUMN category VARCHAR(100) NULL AFTER name;
 
--- Add a short description for destination cards.
-ALTER TABLE sites
-ADD COLUMN short_description VARCHAR(300) NULL AFTER description;
 
 -- Control whether a destination is displayed publicly.
 ALTER TABLE sites
