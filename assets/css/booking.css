@@ -130,3 +130,97 @@
     opacity: 0.5;
     cursor: not-allowed;
 }
+
+/* =====================================================
+   TICKET PAGE (details.php)
+   ===================================================== */
+
+/* Tour summary: label on the left, value on the right. */
+.tour-summary {
+    list-style: none;
+    max-width: 480px;
+    margin-bottom: 15px;
+}
+
+/* One line of the summary, with a thin line underneath. */
+.tour-summary li {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Grey labels such as "Date" and "Time". */
+.tour-summary span {
+    color: #5c6b63;
+}
+
+/* Error messages, e.g. "Only 5 spaces are left". */
+.booking-error {
+    color: #b42318;
+    font-weight: 600;
+}
+
+/* Stack the ticket rows with a gap between them. */
+.ticket-rows {
+    display: grid;
+    gap: 12px;
+    max-width: 480px;
+}
+
+/* One ticket type: name and price on the left, number box on the right. */
+.ticket-row {
+    display: flex;
+    gap: 16px;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    background: #fff;
+}
+
+/* Ticket name on one line, price on the next. */
+.ticket-row label strong,
+.ticket-row label span {
+    display: block;
+}
+
+/* Make the "GHS 50.00 each" line smaller and grey. */
+.ticket-row label span {
+    font-size: 14px;
+    color: #5c6b63;
+}
+
+/* The number box: big enough to tap on a phone.
+   ".ticket-row .ticket-qty" is more specific than the shared
+   input styles in style.css, so our fixed width wins. */
+.ticket-row .ticket-qty {
+    flex: 0 0 90px;
+    width: 90px;
+    padding: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 16px;
+    text-align: center;
+}
+
+/* The "People: 2 · Total: GHS 40.00" line. */
+.ticket-total {
+    margin-top: 18px;
+    font-size: 18px;
+}
+
+/* Faded look for the Confirm button when it's off. */
+#book-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Small grey note under the button. */
+.small-print {
+    font-size: 13px;
+    color: #5c6b63;
+    margin-top: 10px;
+}
