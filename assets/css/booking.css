@@ -224,3 +224,75 @@
     color: #5c6b63;
     margin-top: 10px;
 }
+
+/* =====================================================
+   CONFIRMATION / TICKET PAGE (confirmation.php)
+   ===================================================== */
+
+/* Green "Your booking has been received!" line. */
+.ticket-success {
+    color: var(--secondary-green);
+    font-weight: 700;
+    font-size: 18px;
+}
+
+/* Small rounded label showing the booking status. */
+.status-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+/* Status colours: gold for waiting, green for good, red for cancelled. */
+.status-pending   { background: #fdf3dc; color: #8a5a00; }
+.status-confirmed { background: var(--light-green); color: var(--primary-green); }
+.status-completed { background: var(--light-green); color: var(--primary-green); }
+.status-cancelled { background: #fde8e7; color: #b42318; }
+
+/* Details on the left, QR code on the right. Wraps on small screens. */
+.ticket-body {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    align-items: flex-start;
+    margin: 20px 0;
+}
+
+/* Let the details list take the free space. */
+.ticket-body .tour-summary {
+    flex: 1 1 300px;
+}
+
+/* Centre the QR code and its caption. */
+.ticket-qr {
+    text-align: center;
+}
+
+/* White box with padding around the QR code so it scans easily. */
+#qr-code {
+    display: inline-block;
+    padding: 12px;
+    background: #fff;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+}
+
+/* Space between the Print and Book another buttons. */
+.ticket-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+/* When printing, hide the website's header, footer and buttons,
+   so only the ticket itself is printed. */
+@media print {
+    .site-header,
+    .site-footer,
+    .ticket-actions {
+        display: none !important;
+    }
+}

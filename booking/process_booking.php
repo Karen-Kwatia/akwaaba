@@ -205,10 +205,20 @@ try {
 }
 
 // -----------------------------------------------------
-// 4. GO TO THE CONFIRMATION PAGE
+// 4. SEND THE CONFIRMATION EMAIL (IF EMAIL IS SET UP)
+// -----------------------------------------------------
+
+// Load the function that sends the booking email.
+require_once __DIR__ . '/booking_email.php';
+
+// Try to send it. If email isn't set up on this computer it
+// quietly does nothing, so the booking still works.
+sendBookingConfirmationEmail($pdo, $bookingId);
+
+// -----------------------------------------------------
+// 5. GO TO THE CONFIRMATION PAGE
 // -----------------------------------------------------
 
 // Send the tourist to the confirmation page for their new booking.
-// (confirmation.php is the next step we build.)
 header('Location: confirmation.php?booking_id=' . (int) $bookingId);
 exit;
