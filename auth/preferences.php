@@ -6,6 +6,12 @@ require_once __DIR__ . '/../includes/auth.php';
 // Make sure only logged-in users can access this page.
 requireLogin('login.php');
 
+// Load the reusable PDO database connection.
+require_once __DIR__ . '/../includes/db.php';
+
+// Load the language translation system.
+require_once __DIR__ . '/../includes/language.php';
+
 // Define the languages supported by Akwaaba 360.
 $allowedLanguages = [
     'en' => 'English',
@@ -22,30 +28,52 @@ $allowedCurrencies = [
     'GBP' => 'British Pound (GBP)'
 ];
 
-// Set the default language to English.
-$language = 'en';
+// Get the logged-in user's database ID.
+$userId = $_SESSION['user_id'];
 
-// Set the default currency to Ghanaian Cedi.
-$currency = 'GHS';
+// Get the user's current preferences from the session or cookies.
+$language = $_SESSION['preferred_language']
+    ?? $_COOKIE['preferred_language']
+    ?? 'en';
 
-// Check whether the browser already has a saved language.
-if (isset($_COOKIE['preferred_language'])) {
-    // Use the saved language only if it is supported.
-    if (array_key_exists($_COOKIE['preferred_language'], $allowedLanguages)) {
-        $language = $_COOKIE['preferred_language'];
-    }
+$currency = $_SESSION['preferred_currency']
+    ?? $_COOKIE['preferred_currency']
+    ?? 'GHS';
+
+// Retrieve the user's saved preferences from the database.
+$stmt = $pdo->prepare(
+    "SELECT preferred_language, preferred_currency
+     FROM users
+     WHERE id = ?"
+);
+
+$stmt->execute([$userId]);
+
+// Fetch the user's saved preferences.
+$userPreferences = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Use the database preferences when available.
+if ($userPreferences) {
+    $language = $userPreferences['preferred_language'];
+    $currency = $userPreferences['preferred_currency'];
 }
 
-// Check whether the browser already has a saved currency.
-if (isset($_COOKIE['preferred_currency'])) {
-    // Use the saved currency only if it is supported.
-    if (array_key_exists($_COOKIE['preferred_currency'], $allowedCurrencies)) {
-        $currency = $_COOKIE['preferred_currency'];
-    }
+// Make sure the selected language is supported.
+if (!array_key_exists($language, $allowedLanguages)) {
+    $language = 'en';
 }
 
-// Initialise a variable for displaying messages.
-$message = '';
+// Make sure the selected currency is supported.
+if (!array_key_exists($currency, $allowedCurrencies)) {
+    $currency = 'GHS';
+}
+
+// Synchronise the session with the saved preferences.
+$_SESSION['preferred_language'] = $language;
+$_SESSION['preferred_currency'] = $currency;
+
+// Initialise the variable that stores the message translation key.
+$messageKey = '';
 
 // Process the preferences form when submitted.
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -62,41 +90,82 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         array_key_exists($selectedCurrency, $allowedCurrencies)
     ) {
 
-        // Set the cookie expiry to one year from now.
-        $expiry = time() + (365 * 24 * 60 * 60);
+        // Save both preferences in the database.
+        $stmt = $pdo->prepare(
+            "UPDATE users
+             SET preferred_language = ?, preferred_currency = ?
+             WHERE id = ?"
+        );
 
-        // Save the selected language in the browser.
-        setcookie('preferred_language', $selectedLanguage, [
-            'expires' => $expiry,
-            'path' => '/akwaaba',
-            'secure' => isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
-            'httponly' => true,
-            'samesite' => 'Lax'
+        // Execute the database update using the user's selections.
+        $updated = $stmt->execute([
+            $selectedLanguage,
+            $selectedCurrency,
+            $userId
         ]);
 
-        // Save the selected currency in the browser.
-        setcookie('preferred_currency', $selectedCurrency, [
-            'expires' => $expiry,
-            'path' => '/akwaaba',
-            'secure' => isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
-            'httponly' => true,
-            'samesite' => 'Lax'
-        ]);
+        // Check whether the database update was successful.
+        if ($updated) {
 
-        // Redirect to reload the page with the newly saved cookies.
-        header('Location: preferences.php?saved=1');
-        exit;
+            // Set the cookie expiry to one year from now.
+            $expiry = time() + (365 * 24 * 60 * 60);
+
+            // Update the active session language.
+            $_SESSION['preferred_language'] = $selectedLanguage;
+
+            // Update the active session currency.
+            $_SESSION['preferred_currency'] = $selectedCurrency;
+
+            // Save the selected language in the browser cookie.
+            setcookie('preferred_language', $selectedLanguage, [
+                'expires' => $expiry,
+                'path' => '/akwaaba',
+                'secure' => isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
+                'httponly' => true,
+                'samesite' => 'Lax'
+            ]);
+
+            // Save the selected currency in the browser cookie.
+            setcookie('preferred_currency', $selectedCurrency, [
+                'expires' => $expiry,
+                'path' => '/akwaaba',
+                'secure' => isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
+                'httponly' => true,
+                'samesite' => 'Lax'
+            ]);
+
+            // Redirect to reload the page using the updated preferences.
+            header('Location: preferences.php?saved=1');
+            exit;
+
+        } else {
+
+            // Store the translation key for the error message.
+            $messageKey = 'preferences_error';
+        }
 
     } else {
 
-        // Display an error if either selection is invalid.
-        $message = 'Please select a valid language and currency.';
+        // Store the translation key for invalid selections.
+        $messageKey = 'preferences_error';
     }
 }
 
-// Display a confirmation after preferences have been saved.
+// Display a confirmation message after preferences are saved.
 if (isset($_GET['saved'])) {
-    $message = 'Your preferences have been saved successfully!';
+    $messageKey = 'preferences_saved';
+}
+
+// Determine the logged-in user's role.
+$userRole = strtolower($_SESSION['user_role'] ?? '');
+
+// Select the correct dashboard link according to the user's role.
+if ($userRole === 'guide') {
+    $dashboardLink = '../guide/dashboard.php';
+} elseif ($userRole === 'admin') {
+    $dashboardLink = '../admin/dashboard.php';
+} else {
+    $dashboardLink = 'dashboard.php';
 }
 
 // Include the shared website header and navigation.
@@ -106,51 +175,67 @@ require_once __DIR__ . '/../includes/header.php';
 <!-- Display the preferences form inside a styled content card. -->
 <section class="content-card">
 
-    <!-- Display the page heading. -->
-    <h1>Your Preferences</h1>
+    <!-- Display the translated page heading. -->
+    <h1>
+        <?php echo htmlspecialchars(ak360_translate('preferences_title')); ?>
+    </h1>
 
-    <!-- Display a success or error message. -->
-    <?php if ($message !== ''): ?>
-        <p><?php echo htmlspecialchars($message); ?></p>
+    <!-- Display a translated success or error message when available. -->
+    <?php if ($messageKey !== ''): ?>
+        <p>
+            <?php echo htmlspecialchars(ak360_translate($messageKey)); ?>
+        </p>
     <?php endif; ?>
 
     <!-- Allow users to choose their preferred language and currency. -->
     <form method="POST" action="">
 
-        <!-- Provide the supported language options. -->
-        <label for="language">Preferred Language:</label>
+        <!-- Display the translated language selection label. -->
+        <label for="language">
+            <?php echo htmlspecialchars(ak360_translate('preferred_language')); ?>
+        </label>
 
+        <!-- Display the four supported language options. -->
         <select id="language" name="language" required>
             <?php foreach ($allowedLanguages as $code => $name): ?>
-                <option value="<?php echo htmlspecialchars($code); ?>"
-                    <?php echo ($language === $code) ? 'selected' : ''; ?>>
+                <option
+                    value="<?php echo htmlspecialchars($code); ?>"
+                    <?php echo ($language === $code) ? 'selected' : ''; ?>
+                >
                     <?php echo htmlspecialchars($name); ?>
                 </option>
             <?php endforeach; ?>
         </select>
 
-        <!-- Provide the supported currency options. -->
-        <label for="currency">Preferred Currency:</label>
+        <!-- Display the translated currency selection label. -->
+        <label for="currency">
+            <?php echo htmlspecialchars(ak360_translate('preferred_currency')); ?>
+        </label>
 
+        <!-- Display the supported currencies using translated names. -->
         <select id="currency" name="currency" required>
             <?php foreach ($allowedCurrencies as $code => $name): ?>
-                <option value="<?php echo htmlspecialchars($code); ?>"
-                    <?php echo ($currency === $code) ? 'selected' : ''; ?>>
-                    <?php echo htmlspecialchars($name); ?>
+                <option
+                    value="<?php echo htmlspecialchars($code); ?>"
+                    <?php echo ($currency === $code) ? 'selected' : ''; ?>
+                >
+                    <?php echo htmlspecialchars(ak360_translate('currency_' . $code)); ?>
                 </option>
             <?php endforeach; ?>
         </select>
 
-        <!-- Save the selected preferences using the shared button style. -->
+        <!-- Save the selected preferences. -->
         <button type="submit" class="btn btn-primary">
-            Save Preferences
+            <?php echo htmlspecialchars(ak360_translate('save_preferences')); ?>
         </button>
 
     </form>
 
-    <!-- Provide a link back to the tourist dashboard. -->
+    <!-- Provide a link back to the appropriate dashboard. -->
     <p>
-        <a href="dashboard.php" class="btn btn-secondary">Back to Dashboard</a>
+        <a href="<?php echo htmlspecialchars($dashboardLink); ?>" class="btn btn-secondary">
+            <?php echo htmlspecialchars(ak360_translate('back_to_dashboard')); ?>
+        </a>
     </p>
 
 </section>

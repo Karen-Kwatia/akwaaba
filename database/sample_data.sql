@@ -331,3 +331,59 @@ VALUES
     1,
     1
 );
+
+
+
+-- =========================================
+-- SITE IMAGES
+-- Sample images for the three destinations.
+-- =========================================
+
+-- Add images for Cape Coast Castle (site ID 1).
+INSERT INTO site_images (site_id, image_path, alt_text, sort_order)
+VALUES
+(1, 'uploads/sites/cape_coast_castle/aerial-view.jpg', 'Aerial view of Cape Coast Castle', 1),
+(1, 'uploads/sites/cape_coast_castle/left-sided-view.jpg', 'Left-sided view of Cape Coast Castle', 2),
+(1, 'uploads/sites/cape_coast_castle/right-sided-view.jpg', 'Right-sided view of Cape Coast Castle', 3);
+
+-- Add images for Kakum National Park (site ID 2).
+INSERT INTO site_images (site_id, image_path, alt_text, sort_order)
+VALUES
+(2, 'uploads/sites/kakum_national_park/canopy-walk-1.jpg', 'Canopy walkway at Kakum National Park', 1),
+(2, 'uploads/sites/kakum_national_park/canopy-walk-2.jpeg', 'Another view of the Kakum canopy walkway', 2),
+(2, 'uploads/sites/kakum_national_park/treehouse.jpg', 'Treehouse at Kakum National Park', 3);
+
+-- Add images for Mole National Park (site ID 3).
+INSERT INTO site_images (site_id, image_path, alt_text, sort_order)
+VALUES
+(3, 'uploads/sites/mole_national_park/animals.jpg', 'Wildlife at Mole National Park', 1),
+(3, 'uploads/sites/mole_national_park/aerial-view.jpg', 'Aerial view of Mole National Park', 2),
+(3, 'uploads/sites/mole_national_park/mole-park-entrance.jpg', 'Entrance to Mole National Park', 3);
+
+
+
+-- Update Cape Coast Castle.
+UPDATE sites
+SET
+    category = 'Historical Site',
+    status = 'active'
+WHERE name = 'Cape Coast Castle';
+
+-- Update Kakum National Park.
+UPDATE sites
+SET
+    category = 'National Park',
+    status = 'active'
+WHERE name = 'Kakum National Park';
+
+-- Update Mole National Park.
+UPDATE sites
+SET
+    category = 'National Park',
+    status = 'active'
+WHERE name = 'Mole National Park';
+
+-- Display the updated destination records.
+SELECT id, name, category, status
+FROM sites
+ORDER BY id;

@@ -6,6 +6,12 @@ require_once __DIR__ . '/../includes/auth.php';
 // Allow only logged-in administrators to access this page.
 requireRole(['admin'], '../auth/login.php');
 
+// Load the language translation system.
+require_once __DIR__ . '/../includes/language.php';
+
+// Get the logged-in administrator's name safely.
+$userName = $_SESSION['user_name'] ?? '';
+
 // Include the shared website header and navigation.
 require_once __DIR__ . '/../includes/header.php';
 ?>
@@ -14,16 +20,25 @@ require_once __DIR__ . '/../includes/header.php';
 <section class="content-card">
 
     <!-- Display the administrator dashboard heading. -->
-    <h1>Akwaaba 360 Admin Dashboard</h1>
+    <h1>
+        <?php echo htmlspecialchars(ak360_translate('admin_dashboard_title')); ?>
+    </h1>
 
     <!-- Display the logged-in administrator's name. -->
     <p>
-        Welcome,
-        <?php echo htmlspecialchars($_SESSION['user_name']); ?>!
+        <?php echo htmlspecialchars(ak360_translate('admin_welcome')); ?>
+        <?php echo htmlspecialchars($userName); ?>!
     </p>
 
     <!-- Display a short description of the administrator's role. -->
-    <p>You have access to the administration area.</p>
+    <p>
+        <?php echo htmlspecialchars(ak360_translate('admin_description')); ?>
+    </p>
+
+    <!-- Provide access to the language and currency preferences page. -->
+    <a href="../auth/preferences.php" class="btn btn-primary">
+        <?php echo htmlspecialchars(ak360_translate('preferences')); ?>
+    </a>
 
 </section>
 

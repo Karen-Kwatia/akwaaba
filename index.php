@@ -1,74 +1,245 @@
 
 <?php
-// Load the authentication system to start the session.
+// Load the authentication system and start the session.
 require_once __DIR__ . '/includes/auth.php';
 
-// Include the shared website header and navigation.
+// Include the shared website header and translation system.
 require_once __DIR__ . '/includes/header.php';
 ?>
 
-<!-- Create the homepage hero section. -->
-<section class="content-card">
+<style>
 
-    <!-- Introduce the platform to visitors. -->
-    <h1>Discover Ghana with Akwaaba 360</h1>
+/* Give the homepage a clean, warm background without an image. */
+.homepage-background {
+    background: #FFF8ED;
+    min-height: 100vh;
+    padding: 35px 5%;
+}
 
-    <!-- Explain the main purpose of the platform. -->
-    <p>
-        Explore Ghana's beautiful tourist destinations,
-        experience its rich culture and connect with
-        knowledgeable local tour guides.
-    </p>
+/* Arrange the main homepage welcome section. */
+.home-hero {
+    min-height: 430px;
+    display: flex;
+    align-items: center;
+    padding: 50px 3%;
+}
 
-    <!-- Provide a link to explore tourist destinations. -->
-    <a href="/akwaaba/tours/index.php" class="btn btn-primary">
-        Explore Ghana
-    </a>
+/* Limit the width of the welcome message. */
+.home-hero-content {
+    max-width: 680px;
+}
 
-    <!-- Allow visitors without accounts to register. -->
-    <?php if (!isset($_SESSION['user_id'])): ?>
+/* Style the main homepage heading. */
+.home-hero h1 {
+    color: #073B32;
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    line-height: 1.15;
+    margin: 15px 0;
+}
 
-        <a href="/akwaaba/auth/register.php" class="btn btn-secondary">
-            Create an Account
-        </a>
+/* Style the introductory paragraph. */
+.home-hero-content p:not(.section-label) {
+    color: #333333;
+    font-size: 1.15rem;
+    line-height: 1.8;
+    max-width: 600px;
+}
 
-    <?php endif; ?>
+/* Highlight the introductory label. */
+.home-hero .section-label {
+    color: #E66B43;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
 
-</section>
+/* Arrange the homepage feature cards. */
+.home-features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+    margin: 35px 0;
+}
 
-<!-- Introduce the platform's main features. -->
-<section class="container">
+/* Make the features heading span the full section width. */
+.home-section-heading {
+    grid-column: 1 / -1;
+    text-align: center;
+    margin-bottom: 15px;
+}
 
-    <h2>Explore What Akwaaba 360 Offers</h2>
+/* Style the features section heading. */
+.home-section-heading h2 {
+    color: #073B32;
+}
 
-    <!-- Display the first platform feature. -->
-    <div class="content-card">
-        <h3>Virtual Experiences</h3>
-        <p>
-            Preview tourist destinations through immersive
-            videos and virtual experiences.
-        </p>
-    </div>
+.home-section-heading p {
+    color: #444444;
+}
 
-    <!-- Display the second platform feature. -->
-    <div class="content-card">
-        <h3>Book Local Tour Guides</h3>
-        <p>
-            Find knowledgeable guides and arrange tours
-            that match your preferred language.
-        </p>
-    </div>
+/* Highlight the features section label. */
+.home-section-heading .section-label {
+    color: #E66B43;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
 
-    <!-- Display the third platform feature. -->
-    <div class="content-card">
-        <h3>Share Your Experiences</h3>
-        <p>
-            Share travel moments, discover visitor stories
-            and collect stamps in your Heritage Passport.
-        </p>
-    </div>
+/* Give feature cards a solid, light background. */
+.home-features .content-card {
+    background: #FFFFFF;
+    border: 1px solid #E8DFD2;
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
 
-</section>
+/* Make feature headings dark green. */
+.home-features .content-card h3 {
+    color: #073B32;
+}
+
+/* Make feature descriptions readable. */
+.home-features .content-card p {
+    color: #333333;
+    line-height: 1.7;
+}
+
+/* Adjust the homepage for mobile screens. */
+@media (max-width: 768px) {
+
+    .homepage-background {
+        padding: 20px 5%;
+    }
+
+    .home-hero {
+        min-height: 400px;
+        padding: 35px 10px;
+    }
+
+    .home-features {
+        grid-template-columns: 1fr;
+    }
+}
+
+</style>
+
+<!-- Begin the homepage content. -->
+<div class="homepage-background">
+
+    <!-- Display the main welcome section. -->
+    <section class="home-hero">
+
+        <div class="home-hero-content">
+
+            <?php if (isset($_SESSION['user_id'])): ?>
+
+                <!-- Welcome logged-in users personally. -->
+                <p class="section-label">
+                    <?php echo htmlspecialchars(ak360_translate('welcome_label')); ?>
+                </p>
+
+                <h1>
+                    <?php echo htmlspecialchars(ak360_translate('welcome_back')); ?>
+                    <?php echo htmlspecialchars($_SESSION['user_name']); ?>!
+                </h1>
+
+            <?php else: ?>
+
+                <!-- Introduce Akwaaba 360 to visitors. -->
+                <p class="section-label">
+                    <?php echo htmlspecialchars(ak360_translate('hero_label')); ?>
+                </p>
+
+                <h1>
+                    <?php echo htmlspecialchars(ak360_translate('hero_title')); ?>
+                </h1>
+
+            <?php endif; ?>
+
+            <!-- Explain what visitors can do on the platform. -->
+            <p>
+                <?php echo htmlspecialchars(ak360_translate('hero_description')); ?>
+            </p>
+
+            <!-- Provide access to the destinations page. -->
+            <a href="/akwaaba/tours/index.php" class="btn btn-primary">
+                <?php echo htmlspecialchars(ak360_translate('explore_ghana')); ?>
+            </a>
+
+            <?php if (!isset($_SESSION['user_id'])): ?>
+
+                <!-- Allow visitors to create an account. -->
+                <a href="/akwaaba/auth/register.php" class="btn btn-secondary">
+                    <?php echo htmlspecialchars(ak360_translate('create_account')); ?>
+                </a>
+
+            <?php endif; ?>
+
+        </div>
+
+    </section>
+
+    <!-- Display the platform's main features. -->
+    <section class="home-features">
+
+        <!-- Introduce the features section. -->
+        <div class="home-section-heading">
+
+            <p class="section-label">
+                <?php echo htmlspecialchars(ak360_translate('journey_label')); ?>
+            </p>
+
+            <h2>
+                <?php echo htmlspecialchars(ak360_translate('features_title')); ?>
+            </h2>
+
+            <p>
+                <?php echo htmlspecialchars(ak360_translate('features_description')); ?>
+            </p>
+
+        </div>
+
+        <!-- Describe the virtual experiences feature. -->
+        <div class="content-card">
+
+            <h3>
+                <?php echo htmlspecialchars(ak360_translate('virtual_experiences')); ?>
+            </h3>
+
+            <p>
+                <?php echo htmlspecialchars(ak360_translate('virtual_description')); ?>
+            </p>
+
+        </div>
+
+        <!-- Describe the local tour guides feature. -->
+        <div class="content-card">
+
+            <h3>
+                <?php echo htmlspecialchars(ak360_translate('local_guides')); ?>
+            </h3>
+
+            <p>
+                <?php echo htmlspecialchars(ak360_translate('guides_description')); ?>
+            </p>
+
+        </div>
+
+        <!-- Describe the experience-sharing feature. -->
+        <div class="content-card">
+
+            <h3>
+                <?php echo htmlspecialchars(ak360_translate('share_experiences')); ?>
+            </h3>
+
+            <p>
+                <?php echo htmlspecialchars(ak360_translate('share_description')); ?>
+            </p>
+
+        </div>
+
+    </section>
+
+</div>
 
 <?php
 // Include the shared website footer.

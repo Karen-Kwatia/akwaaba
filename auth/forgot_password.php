@@ -1,14 +1,19 @@
 
 <?php
-
 // Load the reusable database connection.
 require_once __DIR__ . '/../includes/db.php';
 
 // Load the reusable email-sending function.
 require_once __DIR__ . '/../includes/mailer.php';
 
+// Load the language translation system.
+require_once __DIR__ . '/../includes/language.php';
+
 // Initialise a message for displaying feedback.
-$message = '';
+$messageKey = '';
+
+// Keep the submitted email address available after form submission.
+$email = '';
 
 // Process the form when the user submits an email address.
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -74,8 +79,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $resetLink
             );
 
-            // Display a general message without revealing account existence.
-            $message = 'If an account exists with that email, a password reset link will be sent.';
+            // Use a general message without revealing account existence.
+            $messageKey = 'password_reset_request_message';
 
             // Record email delivery failure for the developer.
             if (!$emailSent) {
@@ -85,13 +90,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
 
             // Use the same general message when no account is found.
-            $message = 'If an account exists with that email, a password reset link will be sent.';
+            $messageKey = 'password_reset_request_message';
         }
 
     } else {
 
-        // Display an error when the email address is invalid.
-        $message = 'Please enter a valid email address.';
+        // Display a translated error for an invalid email address.
+        $messageKey = 'forgot_password_invalid_email';
     }
 }
 
@@ -102,41 +107,52 @@ require_once __DIR__ . '/../includes/header.php';
 <!-- Display the password reset form inside a styled content card. -->
 <section class="content-card">
 
-    <!-- Display the page heading. -->
-    <h1>Forgot Your Password?</h1>
+    <!-- Display the translated page heading. -->
+    <h1>
+        <?php echo htmlspecialchars(ak360_translate('forgot_password_title')); ?>
+    </h1>
 
     <!-- Explain what the user needs to do. -->
-    <p>Enter your registered email address to request a password reset.</p>
+    <p>
+        <?php echo htmlspecialchars(ak360_translate('forgot_password_description')); ?>
+    </p>
 
     <!-- Display the result of the password reset request. -->
-    <?php if ($message !== ''): ?>
-        <p><?php echo htmlspecialchars($message); ?></p>
+    <?php if ($messageKey !== ''): ?>
+        <p>
+            <?php echo htmlspecialchars(ak360_translate($messageKey)); ?>
+        </p>
     <?php endif; ?>
 
     <!-- Collect the email address associated with the account. -->
     <form method="POST" action="">
 
         <!-- Label the email input field. -->
-        <label for="email">Email Address:</label>
+        <label for="email">
+            <?php echo htmlspecialchars(ak360_translate('email_address')); ?>
+        </label>
 
         <!-- Collect the user's registered email address. -->
         <input
             type="email"
             id="email"
             name="email"
+            value="<?php echo htmlspecialchars($email); ?>"
             required
         >
 
         <!-- Submit the password reset request. -->
         <button type="submit" class="btn btn-primary">
-            Request Password Reset
+            <?php echo htmlspecialchars(ak360_translate('request_password_reset')); ?>
         </button>
 
     </form>
 
     <!-- Allow users to return to the login page. -->
     <p>
-        <a href="login.php" class="btn btn-secondary">Back to Login</a>
+        <a href="login.php" class="btn btn-secondary">
+            <?php echo htmlspecialchars(ak360_translate('back_to_login')); ?>
+        </a>
     </p>
 
 </section>

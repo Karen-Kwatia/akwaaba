@@ -585,3 +585,40 @@ CREATE TABLE password_resets (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
+
+
+-- Create a table to store multiple images for each destination.
+CREATE TABLE site_images (
+    -- Give every image a unique ID.
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    -- Link the image to its destination in the sites table.
+    site_id INT NOT NULL,
+
+    -- Store the image's relative file path.
+    image_path VARCHAR(255) NOT NULL,
+
+    -- Describe the image for accessibility.
+    alt_text VARCHAR(255),
+
+    -- Control the order in which images appear.
+    sort_order INT DEFAULT 1,
+
+    -- Automatically record when the image was added.
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    -- Ensure each image belongs to a valid destination.
+    FOREIGN KEY (site_id) REFERENCES sites(id) ON DELETE CASCADE
+);
+
+
+
+-- Add a category to classify each tourist destination.
+ALTER TABLE sites
+ADD COLUMN category VARCHAR(100) NULL AFTER name;
+
+
+-- Control whether a destination is displayed publicly.
+ALTER TABLE sites
+ADD COLUMN status ENUM('active', 'inactive')
+NOT NULL DEFAULT 'active' AFTER media_credit;
