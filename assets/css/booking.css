@@ -1,0 +1,132 @@
+/* =====================================================
+   assets/css/booking.css - BOOKING PAGE STYLES
+   Owner: Yayra (booking system)
+   Only loaded on booking pages. Uses the shared colours
+   from style.css (for example var(--primary-green)).
+   Basic layout for now - we will polish the design later.
+   ===================================================== */
+
+/* Small grey line under the site name (region and opening hours). */
+.site-meta {
+    color: #5c6b63;
+}
+
+/* Messages such as "Loading..." or "No tours available". */
+.booking-message {
+    color: var(--primary-green);
+    font-weight: 600;
+    margin-top: 15px;
+}
+
+/* ---------- Site list (when no site is chosen) ---------- */
+
+/* Remove bullet points and stack the site links with a gap. */
+.site-choice-list {
+    list-style: none;
+    display: grid;
+    gap: 12px;
+}
+
+/* Each site link looks like a clickable card. */
+.site-choice {
+    display: flex;
+    justify-content: space-between;
+    padding: 14px 18px;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    background: #fff;
+}
+
+/* Highlight a site card when the mouse is over it. */
+.site-choice:hover {
+    border-color: var(--secondary-green);
+}
+
+/* ---------- Ticket prices ---------- */
+
+/* Show the prices as a neat list without bullet points. */
+.price-list {
+    list-style: none;
+    max-width: 360px;
+}
+
+/* Ticket type on the left, price on the right. */
+.price-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* ---------- The slot picker form ---------- */
+
+/* Labels for each step. */
+#slot-form label,
+.step-label {
+    display: block;
+    font-weight: 700;
+    color: var(--primary-green);
+    margin: 20px 0 8px;
+}
+
+/* Make the language dropdown easy to tap on phones. */
+#language {
+    width: 100%;
+    max-width: 360px;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+/* Lay out date and time buttons in rows that wrap on small screens. */
+.option-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* A date or time button. */
+.option-button {
+    padding: 10px 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: #fff;
+    cursor: pointer;
+    font-size: 15px;
+    text-align: left;
+}
+
+/* Highlight a button when the mouse is over it. */
+.option-button:hover {
+    border-color: var(--secondary-green);
+}
+
+/* The chosen date or time: green background, white text. */
+.option-button.selected {
+    background: var(--secondary-green);
+    border-color: var(--secondary-green);
+    color: #fff;
+}
+
+/* Time buttons show two lines: the time, then spaces and guide. */
+.time-button strong,
+.time-button span {
+    display: block;
+}
+
+/* Make the second line (spaces left and guide) smaller. */
+.time-button span {
+    font-size: 13px;
+}
+
+/* Space above the Continue button. */
+#continue-button {
+    margin-top: 20px;
+}
+
+/* A faded look when Continue is disabled (no time chosen yet). */
+#continue-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
