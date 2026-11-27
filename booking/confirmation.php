@@ -159,12 +159,15 @@ require_once __DIR__ . '/../includes/header.php';
             </p>
         <?php endif; ?>
 
-        <!-- Buttons: print the ticket, or book another tour.
+        <!-- Buttons: print the ticket, book another tour, or see all bookings.
              window.print() opens the browser's print window, which can
              also save the ticket as a PDF. -->
         <div class="ticket-actions">
             <button type="button" class="btn btn-primary" onclick="window.print()">Print ticket</button>
             <a href="book.php" class="btn btn-secondary">Book another tour</a>
+
+            <!-- Link to the list of all this tourist's bookings. -->
+            <a href="my_bookings.php" class="btn btn-secondary">My bookings</a>
         </div>
 
     </section>
