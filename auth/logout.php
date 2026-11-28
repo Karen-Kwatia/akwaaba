@@ -43,8 +43,8 @@ $_SESSION = [];
 // Destroy the current session.
 session_destroy();
 
-// Redirect the user to the login page.
-header('Location: login.php');
+// Redirect the user to the Akwaaba 360 homepage.
+header('Location: /akwaaba/index.php');
 
 // Stop executing the remaining code.
 exit;

@@ -8,6 +8,17 @@ $userRole = $_SESSION['user_role'] ?? null;
 
 // Determine the current user's name.
 $userName = $_SESSION['user_name'] ?? null;
+
+// Provide the booking navigation label in each supported language.
+$bookingLabels = [
+    'en' => 'Bookings',
+    'tw' => 'Nkrataa a wɔahyɛ',
+    'fr' => 'Réservations',
+    'es' => 'Reservas'
+];
+
+// Select the label matching the current website language.
+$bookingLabel = $bookingLabels[$currentLanguage] ?? 'Bookings';
 ?>
 
 <!DOCTYPE html>
@@ -279,6 +290,22 @@ $userName = $_SESSION['user_name'] ?? null;
                             </svg>
 
                             <?php echo htmlspecialchars(ak360_translate('explore_sites')); ?>
+                        </a>
+                    </li>
+
+                    <!-- Provide access to the booking system for all visitors. -->
+                    <li>
+                        <a href="/akwaaba/booking/book.php">
+
+                            <!-- Ticket icon. -->
+                            <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M2 9a3 3 0 0 0 0 6v3h20v-3a3 3 0 0 1 0-6V6H2v3Z"/>
+                                <path d="M13 6v2"/>
+                                <path d="M13 11v2"/>
+                                <path d="M13 16v2"/>
+                            </svg>
+
+                            <?php echo htmlspecialchars($bookingLabel); ?>
                         </a>
                     </li>
 

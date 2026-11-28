@@ -19,6 +19,89 @@ $availableLanguages = [
     'es' => 'Español'
 ];
 
+/**
+ * Validate a redirect destination.
+ *
+ * Destinations must be relative to the application's root.
+ * External websites, absolute paths and directory traversal
+ * attempts are rejected.
+ */
+function getSafeLoginRedirect($destination)
+{
+    // Reject missing, non-string or excessively long destinations.
+    if (!is_string($destination) || $destination === '' || strlen($destination) > 2048) {
+        return null;
+    }
+
+    // Reject control characters and backslashes.
+    if (preg_match('/[\x00-\x1F\x7F\\\\]/', $destination)) {
+        return null;
+    }
+
+    // Parse the supplied destination.
+    $parts = parse_url($destination);
+
+    // Reject invalid URLs.
+    if ($parts === false) {
+        return null;
+    }
+
+    // Reject external URLs and protocol-relative URLs.
+    if (
+        isset($parts['scheme']) ||
+        isset($parts['host']) ||
+        isset($parts['user']) ||
+        isset($parts['pass']) ||
+        isset($parts['port']) ||
+        isset($parts['fragment'])
+    ) {
+        return null;
+    }
+
+    // Retrieve the destination path.
+    $path = $parts['path'] ?? '';
+
+    // Only allow non-empty relative paths.
+    if (
+        $path === '' ||
+        str_starts_with($path, '/') ||
+        str_contains($path, '//')
+    ) {
+        return null;
+    }
+
+    // Decode the path before checking for directory traversal.
+    $decodedPath = rawurldecode($path);
+
+    // Reject attempts to navigate outside the application directory.
+    $segments = explode('/', $decodedPath);
+
+    foreach ($segments as $segment) {
+        if ($segment === '..' || $segment === '.') {
+            return null;
+        }
+    }
+
+    // Allow only ordinary application path characters.
+    if (!preg_match('/^[A-Za-z0-9._\/-]+$/', $path)) {
+        return null;
+    }
+
+    // Prevent redirecting back to the login page itself.
+    if (strtolower($path) === 'auth/login.php') {
+        return null;
+    }
+
+    // Return the validated destination, including its query string.
+    return $destination;
+}
+
+// Get the requested redirect from the current request.
+$requestedRedirect = $_POST['redirect'] ?? $_GET['redirect'] ?? '';
+
+// Validate the requested destination.
+$redirectDestination = getSafeLoginRedirect($requestedRedirect);
+
 // Check whether the visitor selected a different language.
 if (isset($_GET['language'])) {
 
@@ -180,8 +263,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'samesite' => 'Lax'
         ]);
 
-        // Check the user's role and select the appropriate dashboard.
-        if ($user['role'] === 'admin') {
+        // If a valid destination was supplied, return the user there.
+        if ($redirectDestination !== null) {
+
+            // Redirect from the auth folder to the requested application page.
+            header('Location: ../' . $redirectDestination);
+
+        } elseif ($user['role'] === 'admin') {
 
             // Send administrators to the admin dashboard.
             header('Location: ../admin/dashboard.php');
@@ -193,7 +281,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         } else {
 
-            // Send tourists to the general dashboard.
+            // Send tourists to the general dashboard by default.
             header('Location: dashboard.php');
         }
 
@@ -591,6 +679,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <!-- Submit the selected language using a GET request. -->
                 <form method="GET" action="">
 
+                <input
+                    type="hidden"
+                    name="redirect"
+                    value="<?php echo htmlspecialchars($redirectDestination ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                >
+
                     <select
                         id="page-language"
                         name="language"
@@ -627,6 +721,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <!-- Create the login form. -->
             <form method="POST" action="">
 
+            <input
+                type="hidden"
+                name="redirect"
+                value="<?php echo htmlspecialchars($redirectDestination ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+            >
                 <!-- Collect the user's email address. -->
                 <div class="form-group">
 
