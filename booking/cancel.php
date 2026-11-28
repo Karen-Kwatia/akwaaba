@@ -8,8 +8,8 @@
 //   1. Checks the tourist is logged in and the form is genuine.
 //   2. Checks the booking is theirs, still active, and the
 //      tour is more than 24 hours away.
-//   3. Marks the booking as cancelled and gives the spaces
-//      back to the tour slot, so other people can book them.
+//   3. Marks the booking as cancelled, gives the spaces back to
+//      the tour slot, and marks any online payment as refunded.
 //   4. Sends the tourist back to my_bookings.php with a message.
 // =====================================================
 
@@ -57,8 +57,8 @@ $bookingId = isset($_POST['booking_id']) ? (int) $_POST['booking_id'] : 0;
 // 2. CANCEL SAFELY INSIDE A TRANSACTION
 // -----------------------------------------------------
 
-// Both changes (booking status AND the slot's booked count)
-// must happen together, or not at all.
+// All changes (booking status, the slot's booked count and any
+// refund) must happen together, or not at all.
 try {
 
     // Start the transaction.
@@ -111,7 +111,15 @@ try {
     );
     $freeSpaces->execute([$booking['num_people'], $booking['slot_id']]);
 
-    // Save both changes for real.
+    // If the booking was paid online, mark that payment as refunded.
+    // (In this demo no real money moves; a real site would ask
+    // Paystack to send the money back here.)
+    $refundPayment = $pdo->prepare(
+        "UPDATE payments SET status = 'refunded' WHERE booking_id = ? AND status = 'paid'"
+    );
+    $refundPayment->execute([$booking['id']]);
+
+    // Save all the changes for real.
     $pdo->commit();
 
 } catch (Exception $error) {

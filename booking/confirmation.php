@@ -84,6 +84,22 @@ if ($booking) {
 
     // Pick this booking's label (or show the raw status if unknown).
     $statusLabel = $statusLabels[$booking['status']] ?? $booking['status'];
+
+    // Get the latest successful (or pay-at-site) payment for this
+    // booking, if there is one, to show how it was paid.
+    $paymentQuery = $pdo->prepare(
+        "SELECT method, status, provider_ref, created_at
+         FROM payments
+         WHERE booking_id = ? AND status IN ('paid', 'pending', 'refunded')
+         ORDER BY id DESC
+         LIMIT 1"
+    );
+    $paymentQuery->execute([$booking['id']]);
+    $payment = $paymentQuery->fetch();
+
+    // Friendly names for the payment methods and statuses.
+    $methodLabels = ['momo' => 'Mobile Money', 'card' => 'Card', 'pay_at_site' => 'Pay at site'];
+    $paymentStatusLabels = ['paid' => 'Paid', 'pending' => 'To pay at the site', 'refunded' => 'Refunded'];
 }
 
 // Show the shared header and navigation.
@@ -153,10 +169,20 @@ require_once __DIR__ . '/../includes/header.php';
 
         <!-- What to do next, depending on the status. -->
         <?php if ($booking['status'] === 'pending'): ?>
-            <p class="booking-message">
-                Please pay to confirm your place. Online payment is coming soon;
-                for now you can pay at the site on the day.
-            </p>
+
+            <!-- Not paid yet: ask them to pay, with a Pay now button. -->
+            <p class="booking-message">Please pay to confirm your place.</p>
+            <a href="pay.php?booking_id=<?php echo (int) $booking['id']; ?>" class="btn btn-primary">Pay now</a>
+
+        <?php elseif ($payment): ?>
+
+            <!-- Paid (or reserved to pay at site): show the payment details. -->
+            <ul class="tour-summary payment-summary">
+                <li><span>Payment</span><strong><?php echo htmlspecialchars($methodLabels[$payment['method']] ?? $payment['method']); ?></strong></li>
+                <li><span>Payment status</span><strong><?php echo htmlspecialchars($paymentStatusLabels[$payment['status']] ?? $payment['status']); ?></strong></li>
+                <li><span>Transaction ref</span><strong><?php echo htmlspecialchars($payment['provider_ref']); ?></strong></li>
+            </ul>
+
         <?php endif; ?>
 
         <!-- Buttons: print the ticket, book another tour, or see all bookings.

@@ -161,8 +161,13 @@ require_once __DIR__ . '/../includes/header.php';
                     <!-- Action buttons. -->
                     <div class="booking-card-actions">
 
+                        <!-- Not paid yet: show a Pay now button first. -->
+                        <?php if ($booking['status'] === 'pending'): ?>
+                            <a href="pay.php?booking_id=<?php echo (int) $booking['id']; ?>" class="btn btn-primary">Pay now</a>
+                        <?php endif; ?>
+
                         <!-- View the ticket and QR code. -->
-                        <a href="confirmation.php?booking_id=<?php echo (int) $booking['id']; ?>" class="btn btn-primary">View ticket</a>
+                        <a href="confirmation.php?booking_id=<?php echo (int) $booking['id']; ?>" class="btn btn-secondary">View ticket</a>
 
                         <?php if ($booking['can_change']): ?>
 

@@ -399,3 +399,78 @@
     border-color: var(--secondary-green);
     background: var(--light-green);
 }
+
+/* =====================================================
+   PAYMENT PAGE (pay.php)
+   ===================================================== */
+
+/* Gold box warning that this is a demo payment. */
+.demo-banner {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 8px;
+    background: #fdf3dc;
+    color: #8a5a00;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+/* The amount to pay, big and bold. */
+.pay-amount {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--primary-green);
+}
+
+/* The three payment method choices, side by side (wrapping on phones). */
+.pay-methods {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+/* One method choice: a clickable box with its radio button. */
+.pay-method {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 12px 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    background: #fff;
+    cursor: pointer;
+}
+
+/* Method name in bold, small description underneath. */
+.pay-method strong {
+    display: block;
+}
+.pay-method span {
+    font-size: 14px;
+    color: #5c6b63;
+}
+
+/* Highlight the chosen method. */
+.pay-method:has(input:checked) {
+    border-color: var(--secondary-green);
+    background: var(--light-green);
+}
+
+/* The fields box for the chosen method. */
+.pay-fields {
+    max-width: 420px;
+    margin-bottom: 10px;
+}
+
+/* Expiry and CVV side by side. */
+.pay-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+/* Space above the payment details on the ticket page. */
+.payment-summary {
+    margin-top: 10px;
+}
