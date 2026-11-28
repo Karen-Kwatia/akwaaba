@@ -826,22 +826,7 @@ textarea:focus-visible {
     margin: 35px 0;
 }
 
-/* Use one Cape Coast Castle photograph across the homepage. */
-.homepage-background {
-    background:
-        linear-gradient(
-            rgba(0, 0, 0, 0.62),
-            rgba(0, 0, 0, 0.72)
-        ),
-        url('/akwaaba/uploads/sites/cape_coast_castle/aerial-view.jpg');
 
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    background-repeat: no-repeat;
-    padding: 30px 5%;
-    min-height: 100vh;
-}
 
 /* Keep the hero section transparent so the background remains visible. */
 .home-hero {

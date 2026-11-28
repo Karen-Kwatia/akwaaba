@@ -622,3 +622,9 @@ ADD COLUMN category VARCHAR(100) NULL AFTER name;
 ALTER TABLE sites
 ADD COLUMN status ENUM('active', 'inactive')
 NOT NULL DEFAULT 'active' AFTER media_credit;
+
+
+ALTER TABLE users
+ADD COLUMN status ENUM('active', 'suspended')
+NOT NULL DEFAULT 'active'
+AFTER role;

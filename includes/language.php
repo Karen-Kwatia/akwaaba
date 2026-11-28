@@ -91,6 +91,7 @@ $languageTranslations = [
         'request_password_reset' => 'Request Password Reset',
         'password_reset_request_message' => 'If an account exists with that email, a password reset link will be sent.',
         'forgot_password_invalid_email' => 'Please enter a valid email address.',
+        'forgot_password_rate_limit' => 'Too many requests. Please try again in 15 minutes.',
 
         // Reset password page.
         'reset_password_title' => 'Reset Your Password',
@@ -228,6 +229,7 @@ $languageTranslations = [
         'request_password_reset' => 'Bisa Password Foforo Link',
         'password_reset_request_message' => 'Sɛ email yi wɔ akontaabu bi mu a, wɔbɛsoma password foforo link.',
         'forgot_password_invalid_email' => 'Yɛsrɛ wo, kyerɛw email address a ɛfata.',
+        'forgot_password_rate_limit' => 'Woabisa mprɛnsa pii dodo. Yɛsrɛ wo, san yɛ bio wɔ simma 15 akyi.',
 
         // Reset password page.
         'reset_password_title' => 'Yɛ Ahintasɛm Foforo',
@@ -365,6 +367,7 @@ $languageTranslations = [
         'request_password_reset' => 'Demander la réinitialisation',
         'password_reset_request_message' => 'Si un compte existe avec cette adresse e-mail, un lien de réinitialisation sera envoyé.',
         'forgot_password_invalid_email' => 'Veuillez saisir une adresse e-mail valide.',
+        'forgot_password_rate_limit' => 'Trop de demandes. Veuillez réessayer dans 15 minutes.',
 
         // Reset password page.
         'reset_password_title' => 'Réinitialiser votre mot de passe',
@@ -502,6 +505,7 @@ $languageTranslations = [
         'request_password_reset' => 'Solicitar restablecimiento',
         'password_reset_request_message' => 'Si existe una cuenta con ese correo electrónico, se enviará un enlace para restablecer la contraseña.',
         'forgot_password_invalid_email' => 'Introduce una dirección de correo electrónico válida.',
+        'forgot_password_rate_limit' => 'Demasiadas solicitudes. Inténtalo de nuevo en 15 minutos.',
 
         // Reset password page.
         'reset_password_title' => 'Restablecer tu contraseña',
